@@ -153,12 +153,15 @@ export default {
         joke.delivery = this.partSecond;
       }
       this.$store.commit("putJoke", joke);
+      this.reset();
       this.$emit("close");
     },
     emptyTextFields() {
-      if (this.joke.type === "single" && this.partFirst === "") {
-        this.$store.commit("showAlert", "Text fields are required required.");
-        return true;
+      if (this.joke.type === "single") {
+        if (this.partFirst === "") {
+          this.$store.commit("showAlert", "Text fields are required required.");
+          return true;
+        }
       } else {
         if (this.partSecond === "" || this.partFirst === "") {
           this.$store.commit("showAlert", "Text fields are required required.");
@@ -166,6 +169,9 @@ export default {
         }
       }
       return false;
+    },
+    reset() {
+      Object.assign(this.$data, this.$options.data());
     }
   }
 };
