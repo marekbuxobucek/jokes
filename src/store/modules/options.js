@@ -1,6 +1,6 @@
-import axios from "axios";
-import Vuex from "vuex";
-import Vue from "vue";
+import axios from 'axios';
+import Vuex from 'vuex';
+import Vue from 'vue';
 Vue.use(Vuex);
 
 const state = {
@@ -9,10 +9,10 @@ const state = {
       idRange: [],
       categories: [],
       types: [],
-      flags: []
-    }
+      flags: [],
+    },
   },
-  actLang: "en"
+  actLang: 'en',
 };
 const mutations = {
   setOptions(state, options) {
@@ -20,35 +20,35 @@ const mutations = {
   },
   setActLang(state, lang) {
     if (state.options.jokes.idRange?.[lang]) state.actLang = lang;
-  }
+  },
 };
 const getters = {
-  getOptions: state => {
+  getOptions: (state) => {
     return state.options;
   },
-  getActLang: state => {
+  getActLang: (state) => {
     return state.actLang;
-  }
+  },
 };
 const actions = {
   getOptions({ commit }) {
     axios
-      .get("info")
-      .then(resp => {
+      .get('info')
+      .then((resp) => {
         if (!resp?.data?.error) {
-          commit("setOptions", resp.data);
+          commit('setOptions', resp.data);
         } else {
-          commit("showAlert", resp.data.error?.additionalInfo ?? "");
+          commit('showAlert', resp.data.error?.additionalInfo ?? '');
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
-  }
+  },
 };
 export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
 };

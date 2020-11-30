@@ -1,32 +1,30 @@
 <template>
-  <div class="joke row" :class="joke.type">
-    <template v-if="joke.type === 'single'">
-      <jokePart class="part-first" :plainText="joke.joke" :joke="joke" />
-    </template>
-    <template v-else>
-      <jokePart class="part-first" :plainText="joke.setup" :joke="joke" />
-      <jokePart class="part-second" :plainText="joke.delivery" :joke="joke" />
-    </template>
+  <div class="jokes">
+    <component v-for="(joke, index) in jokes" :joke="joke" :key="index" :is="joke.type + 'Joke'" />
   </div>
 </template>
-
 <script>
-import jokePart from "./part";
+import twopartJoke from './twopart';
+import singleJoke from './single';
 export default {
-  name: "joke",
-  components: { jokePart },
+  name: 'Jokes',
   props: {
-    joke: {
-      type: Object,
-      default: () => {}
-    }
-  }
+    groupKey: {
+      type: String,
+      default: '',
+    },
+  },
+  components: {
+    twopartJoke,
+    singleJoke,
+  },
+  computed: {
+    actLang() {
+      return this.$store.getters.getActLang;
+    },
+    jokes() {
+      return this.$store.getters.getJokes(this.actLang, this.groupKey);
+    },
+  },
 };
 </script>
-<style scoped>
-@media (max-width: 768px) {
-  .joke {
-    padding-bottom: 1rem;
-  }
-}
-</style>

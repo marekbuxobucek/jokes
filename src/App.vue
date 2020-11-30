@@ -2,7 +2,11 @@
   <div id="app" class="container">
     <div class="hook-add" @click="formVisible = true"><strong>+</strong></div>
     <div class="row logo-wrap">
+      <div class="lottery"></div>
       <img alt="Joke logo" src="./assets/smile.png" />
+    </div>
+    <div class="row">
+      <group @selected="setJokeGroup" />
     </div>
     <div class="row">
       <ul class="list-selector selector-lang">
@@ -16,33 +20,33 @@
         </li>
       </ul>
     </div>
-    <joke v-for="(joke, index) in jokes" :joke="joke" :key="index" />
+    <jokes :group-key="jokeGroup.key" />
     <div class="row btn-wrap">
       <button class="btn btn-outline-primary btn--blue" @click="getJokeRandom">
         Get more fun!
       </button>
     </div>
-    <jokeForm :visible="formVisible" @close="formVisible = !formVisible" />
-    <alert :msg="error" />
+    <jokeForm v-if="formVisible" :visible="formVisible" @close="formVisible = !formVisible" />
+    <alert />
   </div>
 </template>
 
 <script>
-import joke from "./components/joke";
-import jokeForm from "./components/joke/form";
-import alert from "./components/alert";
+import jokes from './components/joke';
+import group from './components/joke/group';
 export default {
-  name: "App",
+  name: 'App',
   data() {
     return {
-      error: "",
-      formVisible: false
+      formVisible: false,
+      jokeGroup: '',
     };
   },
   components: {
-    joke,
-    jokeForm,
-    alert
+    jokes,
+    group,
+    jokeForm: () => import('./components/joke/form'),
+    alert: () => import('./components/alert'),
   },
   computed: {
     actLang() {
@@ -51,21 +55,21 @@ export default {
     options() {
       return this.$store.getters.getOptions;
     },
-    jokes() {
-      return this.$store.getters.getJokes(this.actLang);
-    }
   },
   created() {
-    this.$store.dispatch("getOptions");
+    this.$store.dispatch('getOptions');
   },
   methods: {
+    setJokeGroup(jokeGroup) {
+      this.jokeGroup = jokeGroup.key;
+    },
     getJokeRandom() {
-      this.$store.dispatch("getJokeRandom", this.actLang);
+      this.$store.dispatch('getJokeRandom', this.actLang);
     },
     setLanguage(iso) {
-      this.$store.commit("setActLang", iso);
-    }
-  }
+      this.$store.commit('setActLang', iso);
+    },
+  },
 };
 </script>
 
@@ -78,20 +82,22 @@ export default {
   margin-top: 60px;
 }
 .logo-wrap {
+  position: relative;
   justify-content: center;
 }
 .list-selector {
   display: inline-flex;
   width: 100%;
-  justify-content: space-evenly;
+  justify-content: center;
   padding: 0;
+  margin: 0;
 }
 .list-selector > li {
   display: flex;
   border: 2px solid #0084ff;
   border-radius: 0 10px;
-  margin: 1rem;
-  padding: 1rem;
+  margin: 0.5rem 1rem;
+  padding: 0.5rem;
   letter-spacing: 1px;
 }
 .list-selector > li.active {

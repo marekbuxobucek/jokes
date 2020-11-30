@@ -4,8 +4,7 @@
       <div class="bubble-header row no-gutters">
         <div class="col-12">
           <strong>{{ joke.lang.toUpperCase() }}</strong
-          >:&nbsp;<span v-if="joke.id >= 0">{{ joke.id }}</span
-          >&nbsp;<span>{{ joke.category }}</span>
+          >:&nbsp;<span>{{ joke.category }}</span>
         </div>
       </div>
       <div class="bubble-body row no-gutters">
@@ -19,17 +18,17 @@
 
 <script>
 export default {
-  name: "jokePart",
+  name: 'jokePart',
   props: {
     plainText: {
       type: String,
-      default: ""
+      default: '',
     },
     joke: {
       type: Object,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>
 

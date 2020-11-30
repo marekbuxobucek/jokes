@@ -6,17 +6,8 @@
           <h3>Select language</h3>
         </div>
         <div class="radio-options">
-          <div
-            class="radio-option"
-            v-for="(item, iso) in options.jokes.idRange"
-            :key="iso"
-          >
-            <input
-              type="radio"
-              :id="'jokeLang' + iso"
-              :value="iso"
-              v-model="joke.lang"
-            />
+          <div class="radio-option" v-for="(item, iso) in options.jokes.idRange" :key="iso">
+            <input type="radio" :id="'jokeLang' + iso" :value="iso" v-model="joke.lang" />
             <label :for="'jokeLang' + iso"
               ><span class="label-text">{{ iso }}</span></label
             >
@@ -28,17 +19,8 @@
           <h3>Select category</h3>
         </div>
         <div class="radio-options">
-          <div
-            class="radio-option"
-            v-for="(title, index) in options.jokes.categories"
-            :key="index"
-          >
-            <input
-              type="radio"
-              :id="'jokeCategory' + title"
-              :value="title"
-              v-model="joke.category"
-            />
+          <div class="radio-option" v-for="(title, index) in options.jokes.categories" :key="index">
+            <input type="radio" :id="'jokeCategory' + title" :value="title" v-model="joke.category" />
             <label :for="'jokeCategory' + title"
               ><span class="label-text">{{ title }}</span></label
             >
@@ -51,32 +33,18 @@
         </div>
         <div class="radio-options">
           <div class="radio-option">
-            <input
-              type="radio"
-              id="jokeTypeSingle"
-              value="single"
-              v-model="joke.type"
-            />
-            <label for="jokeTypeSingle"
-              ><span class="label-text">single</span></label
-            >
+            <input type="radio" id="jokeTypeSingle" value="single" v-model="joke.type" />
+            <label for="jokeTypeSingle"><span class="label-text">single</span></label>
           </div>
           <div class="radio-option">
-            <input
-              type="radio"
-              id="jokeTypeTwopart"
-              value="twopart"
-              v-model="joke.type"
-            />
-            <label for="jokeTypeTwopart"
-              ><span class="label-text">twopart</span></label
-            >
+            <input type="radio" id="jokeTypeTwopart" value="twopart" v-model="joke.type" />
+            <label for="jokeTypeTwopart"><span class="label-text">twopart</span></label>
           </div>
         </div>
       </div>
       <div class="form-group row">
         <label for="JokePartFirst" class="textarea-label col-12">
-          {{ joke.type === "single" ? "Joke" : "Joke setup" }}
+          {{ joke.type === 'single' ? 'Joke' : 'Joke setup' }}
         </label>
         <div class="textarea-wrap">
           <textarea
@@ -90,9 +58,7 @@
         </div>
       </div>
       <div class="form-group row" v-if="joke.type !== 'single'">
-        <label for="JokePartSecond" class="textarea-label col-12"
-          >Joke delivery</label
-        >
+        <label for="JokePartSecond" class="textarea-label col-12">Joke delivery</label>
         <div class="textarea-wrap">
           <textarea
             v-model="partSecond"
@@ -112,32 +78,32 @@
 </template>
 
 <script>
-import modal from "../modal";
+import modal from '../modal';
 export default {
-  name: "jokeForm",
+  name: 'jokeForm',
   components: { modal },
   props: {
     visible: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       joke: {
         id: -1,
-        category: "Any",
-        type: "single",
-        lang: "en"
+        category: 'Any',
+        type: 'single',
+        lang: 'en',
       },
-      partFirst: "",
-      partSecond: ""
+      partFirst: '',
+      partSecond: '',
     };
   },
   computed: {
     options() {
       return this.$store.getters.getOptions;
-    }
+    },
   },
   methods: {
     submit(evt) {
@@ -146,25 +112,25 @@ export default {
         return false;
       }
       const joke = Object.assign({}, this.joke);
-      if (joke.type === "single") {
+      if (joke.type === 'single') {
         joke.joke = this.partFirst;
       } else {
         joke.setup = this.partFirst;
         joke.delivery = this.partSecond;
       }
-      this.$store.commit("putJoke", joke);
+      this.$store.commit('addMyJoke', joke);
       this.reset();
-      this.$emit("close");
+      this.$emit('close');
     },
     emptyTextFields() {
-      if (this.joke.type === "single") {
-        if (this.partFirst === "") {
-          this.$store.commit("showAlert", "Text fields are required required.");
+      if (this.joke.type === 'single') {
+        if (this.partFirst === '') {
+          this.$store.commit('showAlert', 'Text fields are required required.');
           return true;
         }
       } else {
-        if (this.partSecond === "" || this.partFirst === "") {
-          this.$store.commit("showAlert", "Text fields are required required.");
+        if (this.partSecond === '' || this.partFirst === '') {
+          this.$store.commit('showAlert', 'Text fields are required required.');
           return true;
         }
       }
@@ -172,8 +138,8 @@ export default {
     },
     reset() {
       Object.assign(this.$data, this.$options.data());
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -193,26 +159,26 @@ export default {
 .radio-label > h3 {
   margin: 0;
 }
-input[type="radio"] {
+input[type='radio'] {
   display: none;
 }
-input[type="radio"] + label {
+input[type='radio'] + label {
   display: flex;
   border: 2px solid #0084ff;
   padding: 0.3rem;
   transform: skew(-20deg);
   letter-spacing: 1px;
 }
-input[type="radio"] + label > .label-text {
+input[type='radio'] + label > .label-text {
   transform: skew(20deg);
 }
-input[type="radio"]:checked + label {
+input[type='radio']:checked + label {
   font-weight: bold;
   background-color: #0084ff;
   border: 1px solid #cccccc;
   color: white;
 }
-input[type="radio"]:checked + label:hover {
+input[type='radio']:checked + label:hover {
   border-color: #0062cc;
 }
 textarea {

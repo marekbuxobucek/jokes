@@ -11,14 +11,14 @@
 </template>
 
 <script>
-import { Portal } from "@linusborg/vue-simple-portal";
+import { Portal } from '@linusborg/vue-simple-portal';
 export default {
-  name: "alert",
+  name: 'alert',
   components: { Portal },
   data() {
     return {
       timeout: null,
-      visible: false
+      visible: false,
     };
   },
   computed: {
@@ -27,14 +27,14 @@ export default {
     },
     interrupted() {
       return this.$store.getters.getAlertInterruption;
-    }
+    },
   },
   watch: {
     interrupted() {
-      if (this.alert !== "") {
+      if (this.alert !== '') {
         this.showAlert();
       }
-    }
+    },
   },
   methods: {
     showAlert() {
@@ -53,8 +53,8 @@ export default {
     hideTiming() {
       this.visible = false;
       this.timeout = null;
-    }
-  }
+    },
+  },
 };
 </script>
 

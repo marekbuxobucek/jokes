@@ -13,29 +13,29 @@
 </template>
 
 <script>
-import { Portal } from "@linusborg/vue-simple-portal";
+import { Portal } from '@linusborg/vue-simple-portal';
 export default {
-  name: "modal",
+  name: 'modal',
   components: { Portal },
   props: {
     visible: {
       type: Boolean,
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      default: ""
+      default: '',
     },
     hasTitle: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   methods: {
     closeModal() {
-      this.$parent.$emit("close", !this.visible);
-    }
-  }
+      this.$parent.$emit('close', !this.visible);
+    },
+  },
 };
 </script>
 
