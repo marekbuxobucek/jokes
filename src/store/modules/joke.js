@@ -4,22 +4,9 @@ import Vue from 'vue';
 Vue.use(Vuex);
 
 const state = {
-  apiJokes: [],
-  myJokes: [],
+  jokes: [],
 };
-const mutations = {
-  addApiJoke(state, joke) {
-    if (joke.id >= 0 && !state.apiJokes.find((item) => item.id === joke.id)) {
-      joke.group = 'api';
-      state.apiJokes.push(joke);
-    }
-  },
-  addMyJoke(state, joke) {
-    joke.id = state.myJokes.length;
-    joke.group = 'my';
-    state.myJokes.push(joke);
-  },
-};
+
 const helpers = {
   filterJokesByLang(jokes, language) {
     return jokes.filter(
@@ -44,19 +31,32 @@ const helpers = {
     return this.filterJokesByGroup(this.filterJokesByLang(jokes, language), group);
   },
 };
+
+const mutations = {
+  addApiJoke(state, joke) {
+    if (joke.id >= 0 && !state.jokes.find((item) => item.id === joke.id)) {
+      joke.group = 'api';
+      state.jokes.push(joke);
+    }
+  },
+  addMyJoke(state, joke) {
+    joke.id = helpers.filterJokesByGroup(state.jokes, 'my').length;
+    joke.group = 'my';
+    state.jokes.push(joke);
+  },
+};
+
 const getters = {
   getJokes: (state) => (language, group = '') => {
-    return helpers.filterJokes(state.apiJokes.concat(state.myJokes), language, group);
+    return helpers.filterJokes(state.jokes, language, group);
   },
 };
 const actions = {
-  /* In documentation there is ID represented as autoincrement + 1 pointer which cant by skipped.
-  Joke id cant be removed or manipulated to interrupt sequence n+1 starting from zero.
-  Better then asking for random generating joke with api function is better create array of Ids and 
+  /* Better then asking for random generating joke with api function is create array of Ids and
   exclude ids already given. We will sure that jokes will not duplicated and every request will response unique joke
   for our app.
   */
-  getJokeRandom({ commit, state, getters }, language = 'en') {
+  getJokeRandom({ commit, getters }, language = 'en') {
     let arrayOfIds = [];
     const options = getters.getOptions;
     const lang = language.toLowerCase();
@@ -64,8 +64,9 @@ const actions = {
       commit('showAlert', 'There are not jokes for selected language.');
       return false;
     }
+    const jokes = getters.getJokes(lang, 'api');
     for (let i = 0; i < options.jokes.idRange[lang][1]; i++) {
-      if (state.apiJokes.findIndex((item) => item.lang === lang && item.id === i) === -1) {
+      if (jokes.findIndex((item) => item.lang === lang && item.id === i) === -1) {
         arrayOfIds.push(i);
       }
     }

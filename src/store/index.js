@@ -13,5 +13,5 @@ export default new Vuex.Store({
     alert,
     options,
   },
-  plugins: [createPersistedState({ paths: ['options', 'actLang', 'myJokes'] })],
+  plugins: [createPersistedState({ paths: ['options', 'joke'] })],
 });

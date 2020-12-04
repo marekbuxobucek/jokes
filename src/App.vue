@@ -5,22 +5,16 @@
       <div class="lottery"></div>
       <img alt="Joke logo" src="./assets/smile.png" />
     </div>
-    <div class="row">
-      <group @selected="setJokeGroup" />
+    <div class="row block-title">
+      <h3>Find or create funniest Joke</h3>
     </div>
     <div class="row">
-      <ul class="list-selector selector-lang">
-        <li
-          v-for="(lang, iso) in options.jokes.idRange"
-          :key="iso"
-          @click="setLanguage(iso)"
-          :class="{ active: actLang === iso }"
-        >
-          {{ iso }}
-        </li>
-      </ul>
+      <group />
     </div>
-    <jokes :group-key="jokeGroup.key" />
+    <div class="row">
+      <language />
+    </div>
+    <jokes />
     <div class="row btn-wrap">
       <button class="btn btn-outline-primary btn--blue" @click="getJokeRandom">
         Get more fun!
@@ -33,41 +27,30 @@
 
 <script>
 import jokes from './components/joke';
-import group from './components/joke/group';
+import group from './components/joke/filter/group';
+import language from './components/joke/filter/language';
 export default {
   name: 'App',
   data() {
     return {
       formVisible: false,
-      jokeGroup: '',
     };
-  },
-  components: {
-    jokes,
-    group,
-    jokeForm: () => import('./components/joke/form'),
-    alert: () => import('./components/alert'),
   },
   computed: {
     actLang() {
       return this.$store.getters.getActLang;
     },
-    options() {
-      return this.$store.getters.getOptions;
-    },
   },
-  created() {
-    this.$store.dispatch('getOptions');
+  components: {
+    jokes,
+    group,
+    language,
+    jokeForm: () => import('./components/joke/form'),
+    alert: () => import('./components/alert'),
   },
   methods: {
-    setJokeGroup(jokeGroup) {
-      this.jokeGroup = jokeGroup.key;
-    },
     getJokeRandom() {
       this.$store.dispatch('getJokeRandom', this.actLang);
-    },
-    setLanguage(iso) {
-      this.$store.commit('setActLang', iso);
     },
   },
 };
@@ -84,31 +67,6 @@ export default {
 .logo-wrap {
   position: relative;
   justify-content: center;
-}
-.list-selector {
-  display: inline-flex;
-  width: 100%;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
-.list-selector > li {
-  display: flex;
-  border: 2px solid #0084ff;
-  border-radius: 0 10px;
-  margin: 0.5rem 1rem;
-  padding: 0.5rem;
-  letter-spacing: 1px;
-}
-.list-selector > li.active {
-  background-color: #0084ff;
-  border: 2px solid #cccccc;
-  color: white;
-}
-.list-selector > li:hover {
-  border-color: #0062cc;
-  cursor: pointer;
-  text-decoration: underline;
 }
 .btn-wrap {
   justify-content: center;

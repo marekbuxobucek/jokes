@@ -3,8 +3,9 @@
     <div class="joke-part__bubble">
       <div class="bubble-header row no-gutters">
         <div class="col-12">
-          <strong>{{ joke.lang.toUpperCase() }}</strong
-          >:&nbsp;<span>{{ joke.category }}</span>
+          <span class="bubble-lang"
+            ><strong>{{ joke.lang.toUpperCase() }}</strong></span
+          >&nbsp;<span>{{ joke.category }}</span>
         </div>
       </div>
       <div class="bubble-body row no-gutters">
@@ -45,6 +46,9 @@ export default {
   border: 2px solid #cccccc;
   border-radius: 1rem;
   padding: 0.5rem 0;
+}
+.joke.my .joke-part__bubble {
+  border: 2px solid #b2d9a0;
 }
 .bubble-header,
 .bubble-body {

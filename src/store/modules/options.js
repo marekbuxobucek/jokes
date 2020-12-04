@@ -12,6 +12,7 @@ const state = {
       flags: [],
     },
   },
+  actGroup: { id: 0 },
   actLang: 'en',
 };
 const mutations = {
@@ -21,6 +22,9 @@ const mutations = {
   setActLang(state, lang) {
     if (state.options.jokes.idRange?.[lang]) state.actLang = lang;
   },
+  setActGroup(state, group) {
+    state.actGroup = group;
+  },
 };
 const getters = {
   getOptions: (state) => {
@@ -28,6 +32,9 @@ const getters = {
   },
   getActLang: (state) => {
     return state.actLang;
+  },
+  getActGroup: (state) => {
+    return state.actGroup;
   },
 };
 const actions = {
