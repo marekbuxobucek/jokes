@@ -7,14 +7,16 @@
 </template>
 
 <script>
+import { GROUP_MY, GROUP_API, GROUP_ALL } from '../../../mixins/joke';
+
 export default {
   name: 'group',
   data() {
     return {
       groups: [
-        { id: 2, key: 'my', title: 'My' },
-        { id: 1, key: 'api', title: 'Others' },
-        { id: 0, key: '', title: 'All' },
+        { id: GROUP_MY, title: 'My' },
+        { id: GROUP_API, title: 'Others' },
+        { id: GROUP_ALL, title: 'All' },
       ],
     };
   },
@@ -25,7 +27,6 @@ export default {
   },
   methods: {
     setGroup(group) {
-      this.selectedGroupId = group.id;
       this.$store.commit('setActGroup', group);
     },
   },

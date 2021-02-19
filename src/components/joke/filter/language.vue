@@ -1,7 +1,7 @@
 <template>
   <ul class="list-selector selector-lang">
     <li
-      v-for="(lang, iso) in options.jokes.idRange"
+      v-for="(lang, iso) in options.idRange"
       :key="iso"
       @click="setLanguage(iso)"
       :class="{ active: actLang === iso }"

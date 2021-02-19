@@ -9,7 +9,9 @@
 import jokePart from './part';
 export default {
   name: 'jokeTwopart',
+
   components: { jokePart },
+
   props: {
     joke: {
       type: Object,

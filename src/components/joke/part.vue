@@ -3,9 +3,10 @@
     <div class="joke-part__bubble">
       <div class="bubble-header row no-gutters">
         <div class="col-12">
-          <span class="bubble-lang"
-            ><strong>{{ joke.lang.toUpperCase() }}</strong></span
-          >&nbsp;<span>{{ joke.category }}</span>
+          <span class="bubble-lang">
+            <strong>{{ joke.lang.toUpperCase() }}</strong> </span
+          >&nbsp;
+          <span>{{ joke.category }}</span>
         </div>
       </div>
       <div class="bubble-body row no-gutters">
@@ -20,6 +21,7 @@
 <script>
 export default {
   name: 'jokePart',
+
   props: {
     plainText: {
       type: String,
@@ -43,7 +45,7 @@ export default {
   }
 }
 .joke-part__bubble {
-  border: 2px solid #cccccc;
+  box-shadow: inset 0 1px 3px 0 rgba(0, 0, 0, 50);
   border-radius: 1rem;
   padding: 0.5rem 0;
 }

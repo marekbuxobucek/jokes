@@ -1,10 +1,14 @@
 import axios from 'axios';
 import Vuex from 'vuex';
 import Vue from 'vue';
+import { GROUP_API, GROUP_MY, GROUP_ALL } from '../../mixins/joke';
+import { toJoke } from '../../mappers/jokeMapper';
+import { unify } from '../../utils/Mapper';
 Vue.use(Vuex);
 
 const state = {
   jokes: [],
+  isLoadingJokes: false,
 };
 
 const helpers = {
@@ -17,7 +21,7 @@ const helpers = {
     );
   },
   filterJokesByGroup(jokes, group) {
-    if (group === '') {
+    if (group === GROUP_ALL) {
       return jokes;
     }
     return jokes.filter(
@@ -34,20 +38,25 @@ const helpers = {
 
 const mutations = {
   addApiJoke(state, joke) {
+    const jokeF = unify(joke, toJoke);
     if (joke.id >= 0 && !state.jokes.find((item) => item.id === joke.id)) {
-      joke.group = 'api';
-      state.jokes.push(joke);
+      jokeF.group = GROUP_API;
+      state.jokes.push(jokeF);
     }
   },
   addMyJoke(state, joke) {
-    joke.id = helpers.filterJokesByGroup(state.jokes, 'my').length;
-    joke.group = 'my';
-    state.jokes.push(joke);
+    const jokeF = unify(joke, toJoke);
+    jokeF.id = helpers.filterJokesByGroup(state.jokes, GROUP_MY).length;
+    jokeF.group = GROUP_MY;
+    state.jokes.push(jokeF);
+  },
+  setLoadingJokes(state, isLoading) {
+    state.isLoadingJokes = !!isLoading;
   },
 };
 
 const getters = {
-  getJokes: (state) => (language, group = '') => {
+  getJokes: (state) => (language, group = GROUP_ALL) => {
     return helpers.filterJokes(state.jokes, language, group);
   },
 };
@@ -60,12 +69,12 @@ const actions = {
     let arrayOfIds = [];
     const options = getters.getOptions;
     const lang = language.toLowerCase();
-    if (options?.jokes?.idRange?.[lang].length !== 2) {
+    if (!options.idRange[lang]) {
       commit('showAlert', 'There are not jokes for selected language.');
       return false;
     }
-    const jokes = getters.getJokes(lang, 'api');
-    for (let i = 0; i < options.jokes.idRange[lang][1]; i++) {
+    const jokes = getters.getJokes(lang, GROUP_API);
+    for (let i = 0; i < options.idRange[lang]?.to; i++) {
       if (jokes.findIndex((item) => item.lang === lang && item.id === i) === -1) {
         arrayOfIds.push(i);
       }
@@ -76,16 +85,21 @@ const actions = {
     }
     const randomIndex = Math.floor(Math.random() * arrayOfIds.length);
     const url = 'joke/Any?idRange=' + arrayOfIds[randomIndex] + '&lang=' + lang;
+
+    commit('setLoadingJokes', true);
     axios
       .get(url)
       .then((resp) => {
         if (!resp.data.error) {
           commit('addApiJoke', resp.data);
+        } else {
+          commit('showAlert', resp.data.error?.additionalInfo ?? '');
         }
-        commit('showAlert', resp.data.error?.additionalInfo ?? '');
+        commit('setLoadingJokes', false);
       })
       .catch((err) => {
         console.log(err);
+        commit('setLoadingJokes', false);
       });
   },
 };

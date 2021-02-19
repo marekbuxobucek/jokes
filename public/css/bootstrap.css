@@ -689,6 +689,7 @@ button {
 }
 .btn:focus, .btn:hover {
   text-decoration: none;
+  outline: none;
 }
 .btn:not(:disabled):not(.disabled) {
   cursor: pointer;

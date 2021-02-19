@@ -6,12 +6,15 @@
 <script>
 import twopart from './twopart';
 import single from './single';
+
 export default {
   name: 'Jokes',
+
   components: {
     twopart,
     single,
   },
+
   computed: {
     actLang() {
       return this.$store.getters.getActLang;
@@ -20,7 +23,7 @@ export default {
       return this.$store.getters.getActGroup;
     },
     jokes() {
-      return this.$store.getters.getJokes(this.actLang, this.actGroup.key);
+      return this.$store.getters.getJokes(this.actLang, this.actGroup.id);
     },
   },
 };

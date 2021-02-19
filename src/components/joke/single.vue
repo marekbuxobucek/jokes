@@ -8,7 +8,9 @@
 import jokePart from './part';
 export default {
   name: 'jokeSingle',
+
   components: { jokePart },
+
   props: {
     joke: {
       type: Object,

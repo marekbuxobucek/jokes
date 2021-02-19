@@ -6,7 +6,7 @@
           <h3>Select language</h3>
         </div>
         <div class="radio-options">
-          <div class="radio-option" v-for="(item, iso) in options.jokes.idRange" :key="iso">
+          <div class="radio-option" v-for="(item, iso) in options.idRange" :key="iso">
             <input type="radio" :id="'jokeLang' + iso" :value="iso" v-model="joke.lang" />
             <label :for="'jokeLang' + iso"
               ><span class="label-text">{{ iso }}</span></label
@@ -19,7 +19,7 @@
           <h3>Select category</h3>
         </div>
         <div class="radio-options">
-          <div class="radio-option" v-for="(title, index) in options.jokes.categories" :key="index">
+          <div class="radio-option" v-for="(title, index) in options.categories" :key="index">
             <input type="radio" :id="'jokeCategory' + title" :value="title" v-model="joke.category" />
             <label :for="'jokeCategory' + title"
               ><span class="label-text">{{ title }}</span></label
@@ -54,6 +54,7 @@
             name="JokePartFirst"
             cols="20"
             rows="5"
+            required
           ></textarea>
         </div>
       </div>
@@ -67,6 +68,7 @@
             name="JokePartSecond"
             cols="20"
             rows="5"
+            required
           ></textarea>
         </div>
       </div>
@@ -79,15 +81,19 @@
 
 <script>
 import modal from '../modal';
+
 export default {
   name: 'jokeForm',
+
   components: { modal },
+
   props: {
     visible: {
       type: Boolean,
-      default: false,
+      required: true,
     },
   },
+
   data() {
     return {
       joke: {
@@ -100,17 +106,16 @@ export default {
       partSecond: '',
     };
   },
+
   computed: {
     options() {
       return this.$store.getters.getOptions;
     },
   },
+
   methods: {
     submit(evt) {
       evt.preventDefault();
-      if (this.emptyTextFields()) {
-        return false;
-      }
       const joke = Object.assign({}, this.joke);
       if (joke.type === 'single') {
         joke.joke = this.partFirst;
@@ -119,22 +124,9 @@ export default {
         joke.delivery = this.partSecond;
       }
       this.$store.commit('addMyJoke', joke);
+
       this.reset();
       this.$emit('close');
-    },
-    emptyTextFields() {
-      if (this.joke.type === 'single') {
-        if (this.partFirst === '') {
-          this.$store.commit('showAlert', 'Text fields are required required.');
-          return true;
-        }
-      } else {
-        if (this.partSecond === '' || this.partFirst === '') {
-          this.$store.commit('showAlert', 'Text fields are required required.');
-          return true;
-        }
-      }
-      return false;
     },
     reset() {
       Object.assign(this.$data, this.$options.data());

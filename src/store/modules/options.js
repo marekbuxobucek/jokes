@@ -1,26 +1,28 @@
 import axios from 'axios';
 import Vuex from 'vuex';
 import Vue from 'vue';
+import { GROUP_ALL } from '../../mixins/joke';
+import { toConfig } from '../../mappers/configMapper';
+import { unify } from '../../utils/Mapper';
 Vue.use(Vuex);
 
 const state = {
   options: {
-    jokes: {
-      idRange: [],
-      categories: [],
-      types: [],
-      flags: [],
-    },
+    idRange: [],
+    categories: [],
+    types: [],
+    flags: [],
   },
-  actGroup: { id: 0 },
+  actGroup: { id: GROUP_ALL },
   actLang: 'en',
 };
 const mutations = {
   setOptions(state, options) {
-    state.options = options;
+    const optionsU = unify(options, toConfig);
+    if (optionsU) state.options = optionsU;
   },
   setActLang(state, lang) {
-    if (state.options.jokes.idRange?.[lang]) state.actLang = lang;
+    if (state.options.idRange?.[lang]) state.actLang = lang;
   },
   setActGroup(state, group) {
     state.actGroup = group;
@@ -43,7 +45,7 @@ const actions = {
       .get('info')
       .then((resp) => {
         if (!resp?.data?.error) {
-          commit('setOptions', resp.data);
+          commit('setOptions', resp.data?.jokes);
         } else {
           commit('showAlert', resp.data.error?.additionalInfo ?? '');
         }
