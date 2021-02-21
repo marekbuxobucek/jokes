@@ -2,8 +2,10 @@ import axios from 'axios';
 import Vuex from 'vuex';
 import Vue from 'vue';
 import { GROUP_ALL } from '../../mixins/joke';
+import { JOKE_DEFAULT_LANG } from '../../config';
 import { toConfig } from '../../mappers/configMapper';
 import { unify } from '../../utils/Mapper';
+import { ALERT_TYPE_DANGER } from '../../mixins/alert';
 Vue.use(Vuex);
 
 const state = {
@@ -14,7 +16,7 @@ const state = {
     flags: [],
   },
   actGroup: { id: GROUP_ALL },
-  actLang: 'en',
+  actLang: JOKE_DEFAULT_LANG,
 };
 const mutations = {
   setOptions(state, options) {
@@ -47,7 +49,7 @@ const actions = {
         if (!resp?.data?.error) {
           commit('setOptions', resp.data?.jokes);
         } else {
-          commit('showAlert', resp.data.error?.additionalInfo ?? '');
+          commit('showAlert', { msg: resp.data.error?.additionalInfo ?? '', type: ALERT_TYPE_DANGER });
         }
       })
       .catch((err) => {

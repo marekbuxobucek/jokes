@@ -8,9 +8,9 @@
         <div class="radio-options">
           <div class="radio-option" v-for="(item, iso) in options.idRange" :key="iso">
             <input type="radio" :id="'jokeLang' + iso" :value="iso" v-model="joke.lang" />
-            <label :for="'jokeLang' + iso"
-              ><span class="label-text">{{ iso }}</span></label
-            >
+            <label :for="'jokeLang' + iso">
+              <span class="label-text">{{ iso }}</span>
+            </label>
           </div>
         </div>
       </div>
@@ -21,9 +21,9 @@
         <div class="radio-options">
           <div class="radio-option" v-for="(title, index) in options.categories" :key="index">
             <input type="radio" :id="'jokeCategory' + title" :value="title" v-model="joke.category" />
-            <label :for="'jokeCategory' + title"
-              ><span class="label-text">{{ title }}</span></label
-            >
+            <label :for="'jokeCategory' + title">
+              <span class="label-text">{{ title }}</span>
+            </label>
           </div>
         </div>
       </div>
@@ -33,18 +33,18 @@
         </div>
         <div class="radio-options">
           <div class="radio-option">
-            <input type="radio" id="jokeTypeSingle" value="single" v-model="joke.type" />
+            <input type="radio" id="jokeTypeSingle" :value="TYPE_SINGLE" v-model="joke.type" />
             <label for="jokeTypeSingle"><span class="label-text">single</span></label>
           </div>
           <div class="radio-option">
-            <input type="radio" id="jokeTypeTwopart" value="twopart" v-model="joke.type" />
+            <input type="radio" id="jokeTypeTwopart" :value="TYPE_TWOPART" v-model="joke.type" />
             <label for="jokeTypeTwopart"><span class="label-text">twopart</span></label>
           </div>
         </div>
       </div>
       <div class="form-group row">
         <label for="JokePartFirst" class="textarea-label col-12">
-          {{ joke.type === 'single' ? 'Joke' : 'Joke setup' }}
+          {{ joke.type === TYPE_SINGLE ? 'Joke' : 'Joke setup' }}
         </label>
         <div class="textarea-wrap">
           <textarea
@@ -58,7 +58,7 @@
           ></textarea>
         </div>
       </div>
-      <div class="form-group row" v-if="joke.type !== 'single'">
+      <div class="form-group row" v-if="joke.type === TYPE_TWOPART">
         <label for="JokePartSecond" class="textarea-label col-12">Joke delivery</label>
         <div class="textarea-wrap">
           <textarea
@@ -80,6 +80,9 @@
 </template>
 
 <script>
+import { TYPE_SINGLE, TYPE_TWOPART } from '../../mixins/joke';
+import { ALERT_TYPE_SUCCESS } from '../../mixins/alert';
+import { JOKE_DEFAULT_LANG } from '../../config';
 import modal from '../modal';
 
 export default {
@@ -97,10 +100,9 @@ export default {
   data() {
     return {
       joke: {
-        id: -1,
-        category: 'Any',
-        type: 'single',
-        lang: 'en',
+        category: '',
+        type: TYPE_SINGLE,
+        lang: JOKE_DEFAULT_LANG,
       },
       partFirst: '',
       partSecond: '',
@@ -111,26 +113,39 @@ export default {
     options() {
       return this.$store.getters.getOptions;
     },
+    actLang() {
+      return this.$store.getters.getActLang;
+    },
   },
 
   methods: {
     submit(evt) {
       evt.preventDefault();
       const joke = Object.assign({}, this.joke);
-      if (joke.type === 'single') {
+      if (joke.type === TYPE_SINGLE) {
         joke.joke = this.partFirst;
       } else {
         joke.setup = this.partFirst;
         joke.delivery = this.partSecond;
       }
       this.$store.commit('addMyJoke', joke);
-
+      this.jokeAdded();
       this.reset();
       this.$emit('close');
+    },
+    jokeAdded() {
+      this.$store.commit('showAlert', {
+        msg: `Your '${this.joke.lang}' joke was added successfully.`,
+        type: ALERT_TYPE_SUCCESS,
+      });
     },
     reset() {
       Object.assign(this.$data, this.$options.data());
     },
+  },
+  created() {
+    this.TYPE_SINGLE = TYPE_SINGLE;
+    this.TYPE_TWOPART = TYPE_TWOPART;
   },
 };
 </script>

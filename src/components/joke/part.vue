@@ -4,14 +4,14 @@
       <div class="bubble-header row no-gutters">
         <div class="col-12">
           <span class="bubble-lang">
-            <strong>{{ joke.lang.toUpperCase() }}</strong> </span
+            <strong>{{ language.toUpperCase() }}</strong> </span
           >&nbsp;
-          <span>{{ joke.category }}</span>
+          <span>{{ category }}</span>
         </div>
       </div>
       <div class="bubble-body row no-gutters">
         <div class="col-12">
-          {{ plainText }}
+          {{ text }}
         </div>
       </div>
     </div>
@@ -23,13 +23,17 @@ export default {
   name: 'jokePart',
 
   props: {
-    plainText: {
+    language: {
+      type: String,
+      required: true,
+    },
+    text: {
+      type: String,
+      required: true,
+    },
+    category: {
       type: String,
       default: '',
-    },
-    joke: {
-      type: Object,
-      required: true,
     },
   },
 };

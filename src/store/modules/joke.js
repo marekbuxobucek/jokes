@@ -2,6 +2,8 @@ import axios from 'axios';
 import Vuex from 'vuex';
 import Vue from 'vue';
 import { GROUP_API, GROUP_MY, GROUP_ALL } from '../../mixins/joke';
+import { ALERT_TYPE_DANGER, ALERT_TYPE_INFO } from '../../mixins/alert';
+import { JOKE_DEFAULT_LANG } from '../../config';
 import { toJoke } from '../../mappers/jokeMapper';
 import { unify } from '../../utils/Mapper';
 Vue.use(Vuex);
@@ -59,18 +61,20 @@ const getters = {
   getJokes: (state) => (language, group = GROUP_ALL) => {
     return helpers.filterJokes(state.jokes, language, group);
   },
+  getIsLoadingJokes: (state) => state.isLoadingJokes,
 };
+
 const actions = {
   /* Better then asking for random generating joke with api function is create array of Ids and
   exclude ids already given. We will sure that jokes will not duplicated and every request will response unique joke
   for our app.
   */
-  getJokeRandom({ commit, getters }, language = 'en') {
+  getJokeRandom({ commit, getters }, language = JOKE_DEFAULT_LANG) {
     let arrayOfIds = [];
     const options = getters.getOptions;
     const lang = language.toLowerCase();
     if (!options.idRange[lang]) {
-      commit('showAlert', 'There are not jokes for selected language.');
+      commit('showAlert', { msg: 'There are not jokes for selected language.', type: ALERT_TYPE_INFO });
       return false;
     }
     const jokes = getters.getJokes(lang, GROUP_API);
@@ -80,7 +84,7 @@ const actions = {
       }
     }
     if (arrayOfIds.length === 0) {
-      commit('showAlert', 'Limit of jokes for current language was reached.');
+      commit('showAlert', { msg: 'Limit of jokes for current language was reached.', type: ALERT_TYPE_INFO });
       return false;
     }
     const randomIndex = Math.floor(Math.random() * arrayOfIds.length);
@@ -93,7 +97,7 @@ const actions = {
         if (!resp.data.error) {
           commit('addApiJoke', resp.data);
         } else {
-          commit('showAlert', resp.data.error?.additionalInfo ?? '');
+          commit('showAlert', { msg: resp.data.error?.additionalInfo ?? '', type: ALERT_TYPE_DANGER });
         }
         commit('setLoadingJokes', false);
       })

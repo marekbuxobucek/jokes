@@ -15,7 +15,7 @@ export default {
     return {
       groups: [
         { id: GROUP_MY, title: 'My' },
-        { id: GROUP_API, title: 'Others' },
+        { id: GROUP_API, title: 'External' },
         { id: GROUP_ALL, title: 'All' },
       ],
     };

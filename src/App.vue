@@ -5,7 +5,7 @@
       <div class="lottery"></div>
       <img alt="Joke logo" src="@/assets/smile.png" />
     </div>
-    <div class="row block-title">
+    <div class="row block-title justify-content-center">
       <h3>Find or create funniest Joke</h3>
     </div>
     <div class="row">
@@ -14,17 +14,7 @@
     <div class="row">
       <language />
     </div>
-    <jokes v-infinite-scroll="getJokeRandom" infinite-scroll-disabled="busy" infinite-scroll-distance="10" />
-    <div class="row btn-fun">
-      <button
-        v-if="!isLoadingJokes && !isMyGroupActive"
-        class="btn btn-outline-primary btn--blue"
-        @click="getJokeRandom"
-      >
-        Get more fun!
-      </button>
-      <loading v-else />
-    </div>
+    <jokes @showAddJokeForm="isAddJokeFormVisible = true" />
     <jokeForm v-if="isAddJokeFormVisible" :visible="isAddJokeFormVisible" @close="isAddJokeFormVisible = false" />
     <alert />
   </div>
@@ -35,21 +25,15 @@ import jokes from './components/joke';
 import group from './components/joke/filter/group';
 import language from './components/joke/filter/language';
 import navigation from './components/navigation';
-import loading from './components/Loading';
-import infiniteScroll from 'vue-infinite-scroll';
-import { GROUP_MY } from './mixins/joke';
 
 export default {
   name: 'App',
-
-  directives: { infiniteScroll },
 
   components: {
     jokes,
     group,
     language,
     navigation,
-    loading,
     jokeForm: () => import('./components/joke/form'),
     alert: () => import('./components/alert'),
   },
@@ -58,27 +42,6 @@ export default {
     return {
       isAddJokeFormVisible: false,
     };
-  },
-
-  computed: {
-    actLang() {
-      return this.$store.getters.getActLang;
-    },
-    isLoadingJokes() {
-      return this.$store.getters.isLoadingJokes;
-    },
-    actGroup() {
-      return this.$store.getters.getActGroup;
-    },
-    isMyGroupActive() {
-      return this.actGroup.id === GROUP_MY;
-    },
-  },
-
-  methods: {
-    getJokeRandom() {
-      this.$store.dispatch('getJokeRandom', this.actLang);
-    },
   },
 };
 </script>
@@ -94,10 +57,6 @@ export default {
 .logo-wrap {
   position: relative;
   justify-content: center;
-}
-.btn-fun {
-  justify-content: center;
-  margin-top: 15px;
 }
 .logo-wrap > img {
   height: 300px;

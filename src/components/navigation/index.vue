@@ -100,7 +100,7 @@ export default {
   .hooks .hook {
     width: 20px;
     height: 20px;
-    margin: 0.5rem;
+    margin: 0.2rem;
   }
 }
 .hook:hover {

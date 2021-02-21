@@ -1,22 +1,18 @@
 <template>
-  <div class="joke joke-twopart row" :class="[joke.type, joke.group]">
-    <jokePart class="part-first" :plainText="joke.setup" :joke="joke" />
-    <jokePart class="part-second" :plainText="joke.delivery" :joke="joke" />
+  <div class="joke joke-twopart row" :class="[type, group]">
+    <jokePart class="part-first" :text="partFirst" :language="language" :category="category" />
+    <jokePart class="part-second" :text="partSecond" :language="language" :category="category" />
   </div>
 </template>
 
 <script>
+import joke from '../../mixins/joke';
 import jokePart from './part';
 export default {
   name: 'jokeTwopart',
 
   components: { jokePart },
 
-  props: {
-    joke: {
-      type: Object,
-      default: () => {},
-    },
-  },
+  mixins: [joke],
 };
 </script>

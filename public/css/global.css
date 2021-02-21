@@ -25,11 +25,32 @@
     text-decoration: underline;
 }
 
-/*-------- UNCLASSIFIED --------*/
-.block-title {
+/*-------- ALIGNMENT ----------*/
+.text-center{
+    text-align: center;
+}
+.justify-content-center{
     justify-content: center;
 }
+.align-items-center{
+    align-items: center;
+}
+.mt-bg{
+    margin-top: 1rem;
+}
 
+.mt-sm{
+    margin-top: 0.5rem;
+}
+.mb-bg{
+    margin-top: 1rem;
+}
+.mb-sm{
+    margin-bottom: 0.5rem;
+}
+
+
+/*-------- UNCLASSIFIED --------*/
 html {
     scroll-behavior: smooth;
 }
