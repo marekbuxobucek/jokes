@@ -113,9 +113,6 @@ export default {
     options() {
       return this.$store.getters.getOptions;
     },
-    actLang() {
-      return this.$store.getters.getActLang;
-    },
   },
 
   methods: {
@@ -129,15 +126,12 @@ export default {
         joke.delivery = this.partSecond;
       }
       this.$store.commit('addMyJoke', joke);
-      this.jokeAdded();
-      this.reset();
-      this.$emit('close');
-    },
-    jokeAdded() {
       this.$store.commit('showAlert', {
         msg: `Your '${this.joke.lang}' joke was added successfully.`,
         type: ALERT_TYPE_SUCCESS,
       });
+      this.reset();
+      this.$emit('close');
     },
     reset() {
       Object.assign(this.$data, this.$options.data());
