@@ -19,6 +19,7 @@
 <script>
 import { Portal } from '@linusborg/vue-simple-portal';
 import alert from '../../mixins/alert';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'alert',
@@ -35,9 +36,9 @@ export default {
   },
 
   computed: {
-    interrupted() {
-      return this.$store.getters.getAlertInterruption;
-    },
+    ...mapGetters({
+      interrupted: 'getAlertInterruption',
+    }),
   },
 
   watch: {

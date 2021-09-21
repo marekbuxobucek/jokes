@@ -4,7 +4,7 @@
       <div class="hook hook-add" @click="showAddJokeForm"><strong>+</strong></div>
     </div>
     <div class="hooks-down">
-      <div class="hook hook-top" @click="scrollTop">
+      <div class="hook hook-top" v-show="!isAtTop" @click="scrollTop">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="icon icon-tabler icon-tabler-arrow-bar-to-up"
@@ -24,7 +24,7 @@
           <line x1="4" y1="4" x2="20" y2="4" />
         </svg>
       </div>
-      <div class="hook hook-top" @click="scrollDown">
+      <div class="hook hook-down" v-show="!isAtBottom" @click="scrollDown">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="icon icon-tabler icon-tabler-arrow-bar-to-down"
@@ -52,7 +52,29 @@
 export default {
   name: 'navigation',
 
+  data: () => ({
+    isAtTop: false,
+    isAtBottom: false,
+  }),
+
+  mounted() {
+    this.handleScroll();
+  },
+  created() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
+
   methods: {
+    handleScroll() {
+      this.isAtTop = !Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop);
+      this.isAtBottom =
+        Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) +
+          window.innerHeight ===
+        document.documentElement.offsetHeight;
+    },
     showAddJokeForm() {
       this.$emit('showAddJokeForm');
     },

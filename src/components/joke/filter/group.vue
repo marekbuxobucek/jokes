@@ -1,6 +1,11 @@
 <template>
   <ul class="list-selector selector-group">
-    <li v-for="group in groups" :key="group.id" @click="setGroup(group)" :class="{ active: actGroup.id === group.id }">
+    <li
+      v-for="group in getGroups()"
+      :key="group.id"
+      @click="setGroup(group)"
+      :class="{ active: actGroup.id === group.id }"
+    >
       {{ group.title }}
     </li>
   </ul>
@@ -11,27 +16,26 @@ import { GROUP_MY, GROUP_API, GROUP_ALL } from '../../../mixins/joke';
 
 export default {
   name: 'group',
-  data() {
-    return {
-      groups: [
-        { id: GROUP_MY, title: 'My' },
-        { id: GROUP_API, title: 'External' },
-        { id: GROUP_ALL, title: 'All' },
-      ],
-    };
-  },
+
   computed: {
     actGroup() {
       return this.$store.getters.getActGroup;
     },
   },
   methods: {
+    getGroups() {
+      return [
+        { id: GROUP_MY, title: 'My' },
+        { id: GROUP_API, title: 'External' },
+        { id: GROUP_ALL, title: 'All' },
+      ];
+    },
     setGroup(group) {
       this.$store.commit('setActGroup', group);
     },
   },
   created() {
-    this.setGroup(this.groups.find((group) => group.id === this.actGroup.id));
+    this.setGroup(this.getGroups().find((group) => group.id === this.actGroup.id));
   },
 };
 </script>
