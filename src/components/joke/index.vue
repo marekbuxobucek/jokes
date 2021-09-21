@@ -26,6 +26,7 @@ import loading from '../../components/Loading';
 import infiniteScroll from 'vue-infinite-scroll';
 import twopart from './twopart';
 import single from './single';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Jokes',
@@ -39,17 +40,13 @@ export default {
   directives: { infiniteScroll },
 
   computed: {
-    actLang() {
-      return this.$store.getters.getActLang;
-    },
-    actGroup() {
-      return this.$store.getters.getActGroup;
-    },
+    ...mapGetters({
+      actLang: 'getActLang',
+      actGroup: 'getActGroup',
+      isLoadingJokes: 'getIsLoadingJokes',
+    }),
     jokes() {
       return this.$store.getters.getJokes(this.actLang, this.actGroup.id);
-    },
-    isLoadingJokes() {
-      return this.$store.getters.getIsLoadingJokes;
     },
     isMyGroupActive() {
       return this.actGroup.id === GROUP_MY;

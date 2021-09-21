@@ -41,7 +41,7 @@ const helpers = {
 const mutations = {
   addApiJoke(state, joke) {
     const jokeF = unify(joke, toJoke);
-    if (joke.id >= 0 && !state.jokes.find((item) => item.id === joke.id)) {
+    if (joke.id >= 0 && !helpers.filterJokes(state.jokes, joke.lang, GROUP_API).find((item) => item.id === joke.id)) {
       jokeF.group = GROUP_API;
       state.jokes.push(jokeF);
     }
@@ -97,13 +97,17 @@ const actions = {
         if (!resp.data.error) {
           commit('addApiJoke', resp.data);
         } else {
-          commit('showAlert', { msg: resp.data.error?.additionalInfo ?? '', type: ALERT_TYPE_DANGER });
+          commit('showAlert', {
+            msg: resp.data.error?.additionalInfo ?? 'There has been some problem with loading jokes',
+            type: ALERT_TYPE_DANGER,
+          });
         }
         commit('setLoadingJokes', false);
       })
       .catch((err) => {
         console.log(err);
         commit('setLoadingJokes', false);
+        commit('showAlert', { msg: err.message, type: ALERT_TYPE_DANGER });
       });
   },
 };

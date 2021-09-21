@@ -91,15 +91,13 @@ export default {
   height: 30px;
   border-radius: 50%;
   color: #ffffff;
-  background-color: #677fbc;
-  border: 2px solid #cccccc;
+  background-color: rgba(0, 132, 255, 0.7);
+  border: 2px solid rgba(219, 219, 219, 0.3);
   align-items: center;
   justify-content: center;
 }
 @media (max-width: 768px) {
   .hooks .hook {
-    width: 20px;
-    height: 20px;
     margin: 0.2rem;
   }
 }

@@ -38,6 +38,7 @@ describe('Joke form component unit', () => {
     });
     expect(wrapper.vm).toBeTruthy();
   });
+
   test('is joke form reset after submit', async () => {
     const wrapper = shallowMount(Form, {
       propsData: {
